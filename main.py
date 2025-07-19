@@ -1,41 +1,51 @@
 import pygame
 from graphs import BinaryTree
 from logic import *
+from consts import *
 
-WIDTH = 1000
-HEIGHT = 800
-FPS = 10000
+# Инициализация Pygame
 pygame.init()
+
+
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("ЕГОРУШКА")
-clock = pygame.time.Clock()
-camera_x = 0
-camera_y = 0
+pygame.display.set_caption("joystick sodaluv uwu")
+
+
+myscreen = MyScreen(WIDTH, HEIGHT, [], 0, 0, screen)
+
+start_mouse = (0, 0)
+curr_mouse = (0, 0)
+last_mouse = (0, 0)
+new_mouse = (0, 0)
 running = True
-YELLOW_BG = (255, 255, 224)
-BLACK = (0,0,0)
+is_pressed = False
+is_start = True
 
+entities = [] #[Tree]
 
-screen.fill(YELLOW_BG)
-
-pressed=True
-draw_grid(screen=screen, camera_x=camera_x, camera_y=camera_y)
-pygame.display.flip()
 while running:
-    # Держим цикл на правильной скорости
-    # clock.tick(FPS)
     for event in pygame.event.get():
-        # check for closing window
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.MOUSEBUTTONUP:
-            pressed=(True)
         if event.type == pygame.MOUSEBUTTONDOWN:
-            pressed=(False)
-        if pressed==False:
-            x, y = pygame.mouse.get_pos()
-            draw_point(screen=screen,x=x,y=y,color=BLACK,r=2)
-    if pressed==False:
-        x, y = pygame.mouse.get_pos()
-        draw_point(screen=screen,x=x,y=y,color=BLACK,r=2)
+            is_pressed = True
+            is_start = True
+        if event.type == pygame.MOUSEBUTTONUP:
+            is_pressed = False
+    if is_pressed == True:
+        if is_start == False:
+            last_mouse = curr_mouse
+        is_start = False
+        curr_mouse = pygame.mouse.get_pos()
+        if curr_mouse != last_mouse:
+            myscreen.x += last_mouse[0] - curr_mouse[0]
+            myscreen.y += last_mouse[1] - curr_mouse[1]
+    screen.fill(BACK_COLOR)
+    myscreen.draw_greed(100)
     pygame.display.flip()
+
+# Выход из Pygame
+pygame.quit()
+
+
+# pygame.draw.lines(screen, GREY, True, [(0, 0), (500, 200),(0, 0), (700, 400)], 5)
