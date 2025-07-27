@@ -1,3 +1,11 @@
+class DrawData:
+    def __init__(self, val, is_left, is_right, coordinate):
+        self.val = val
+        self.is_left = is_left
+        self.is_right = is_right
+        self.coordinate = coordinate
+
+
 class BinaryTree:
     def __init__(self, val, left, right, coordinate):
         self.val = val
@@ -9,13 +17,14 @@ class BinaryTree:
         node = self
         if node == None:
             return []
-
         res = []
         queue = [node]
         print(queue)
         while queue:
             temp = queue.pop(0)
-            res.append( (temp.val, (temp.coordinate[0], temp.coordinate[1])) )
+            is_left = temp.left != None
+            is_right = temp.right != None
+            res.append(DrawData(temp.val, is_left, is_right, temp.coordinate))
 
             if temp.left:
                 queue.append(temp.left)
